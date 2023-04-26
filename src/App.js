@@ -1,23 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
+import { db } from "./config/firebase";
+import { getDocs, collection } from "firebase/firestore";
 
 function App() {
+  const [gigList, setGigList] = useState([]);
+
+  const gigsCollectionRef = collection(db, "gigs");
+
+  useEffect(() => {
+    const getGigList = async () => {
+      try {
+        const data = await getDocs(gigsCollectionRef);
+        const filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+        setGigList(filteredData)
+        console.log(filteredData[0].date)
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    getGigList()
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>
+        {gigList.map((gig) => (
+          <div>
+            <h1> {gig.name} </h1>
+            <p>{gig.venue}</p>
+            <p>{gig.location}</p>
+            <p> {gig.date.toDate().toDateString()} </p>
+            <p> {gig.description} </p>
+            <p>{gig.more_info_url}</p>
+            <p>{gig.buy_tickets_url}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
