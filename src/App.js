@@ -14,7 +14,6 @@ function App() {
         const data = await getDocs(gigsCollectionRef);
         const filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
         setGigList(filteredData)
-        console.log(filteredData[0].date)
       } catch (err) {
         console.error(err);
       }
