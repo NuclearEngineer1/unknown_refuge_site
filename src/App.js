@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import { db } from "./config/firebase";
 import { getDocs, collection } from "firebase/firestore";
+import MailListAdder from "./components/MailListAdder"
 
 function App() {
   const [gigList, setGigList] = useState([]);
@@ -12,13 +13,16 @@ function App() {
     const getGigList = async () => {
       try {
         const data = await getDocs(gigsCollectionRef);
-        const filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-        setGigList(filteredData)
+        const filteredData = data.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setGigList(filteredData);
       } catch (err) {
         console.error(err);
       }
     };
-    getGigList()
+    getGigList();
   }, []);
 
   return (
@@ -36,6 +40,7 @@ function App() {
           </div>
         ))}
       </div>
+      <MailListAdder />
     </div>
   );
 }
