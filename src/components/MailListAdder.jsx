@@ -1,28 +1,39 @@
-import {db} from "../config/firebase"
-import { useState } from "react"
-import {collection, addDoc} from "firebase/firestore"
+import { db } from "../config/firebase";
+import { useState } from "react";
+import { collection, addDoc } from "firebase/firestore";
 
 function MailListAdder() {
-  
-  const [email, setEmail] = useState("")
+  const [email, setEmail] = useState("");
+  const [signedUp, setSignedUp] = useState(false);
 
-  const emailListCollectionRef = collection(db, "email_list")
+  const emailListCollectionRef = collection(db, "email_list");
 
-  const onSignUp = async() => {
+  const onSignUp = async () => {
     try {
       await addDoc(emailListCollectionRef, { email });
-    } catch(err) {
-      console.error(err)
+      setSignedUp(true);
+    } catch (err) {
+      console.error(err);
     }
-  }
+  };
 
   return (
-    <div>
-      <input placeholder="Enter email..." onChange={(e) => setEmail(e.target.value)}
-      />
-      <button onClick={onSignUp}> Sign Up </button>
-    </div>
-  )
+    <>
+      {signedUp ? (
+        <p>Thank you for signing up</p>
+    
+      ) : (
+        <>
+          <input
+            placeholder="Enter email..."
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
+          <button onClick={onSignUp}> Sign Up </button>
+        </>
+      )}
+    </>
+  );
 }
 
-export default MailListAdder
+export default MailListAdder;
